@@ -1,0 +1,36 @@
+generated: '2026-07-17'
+method: searched
+source: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+docs: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  oauth2_flows: []
+  note: >-
+    The Adverity Management API uses long-lived API-key (token) authentication in
+    the Authorization header. There is no OAuth2 for the Management API itself;
+    OAuth is used only downstream when Adverity authorizes to connected data
+    sources (Google Ads, Facebook Ads, LinkedIn Ads, etc.) on the user's behalf.
+schemes:
+- name: ManagementApiToken
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Token {{KEY}}'
+  description: >-
+    API keys generated programmatically via POST https://{{INSTANCE}}/api/auth/token/
+    (username + password). The token does not expire and is only rotated when the
+    account password is deliberately changed. Sent as `Authorization: Token {{KEY}}`.
+  sources: [docs]
+- name: ManagementApiBearer
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Bearer {{KEY}}'
+  description: >-
+    API keys generated in the Adverity UI (Administration > Management API keys).
+    Limited to 5 per workspace, require Administrator permissions in the root
+    workspace, do not expire, and can be rotated via
+    POST https://{{INSTANCE}}/api/v1/auth/keys/current/rotate/. Sent as
+    `Authorization: Bearer {{KEY}}`.
+  sources: [docs]
