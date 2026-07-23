@@ -1,0 +1,47 @@
+generated: '2026-07-17'
+method: searched
+status: published
+source: https://docs.adverity.com/guides/mcp/using-mcp.html
+server:
+  name: Adverity Atlas MCP
+  transport: http
+  availability: beta
+  access: Selected customers; contact Account Manager (MCP Beta program)
+  clients:
+  - Claude Desktop
+  - VS Code
+  - Any MCP-compatible AI client
+notes: >-
+  Adverity Atlas exposes the platform through a Model Context Protocol (MCP) server
+  (beta). It lets an AI assistant monitor, configure, and control data pipelines in
+  natural language. The specific per-instance server URL and setup config are
+  published on the setup guide (mcp-setup.html) and provisioned per customer;
+  not reproduced here.
+docs:
+- https://docs.adverity.com/guides/mcp/using-mcp.html
+- https://www.adverity.com/updates/mcp-beta-program
+tools:
+- name: manage_datastream
+  description: Lists, creates, and configures datastreams; view status, enable or disable pipelines, explore connector types and field options.
+- name: manage_authorization
+  description: Manages authorizations for connected data sources (Google Ads, Facebook Ads, LinkedIn Ads, etc.); create connections, monitor expiry, handle OAuth flows, refresh metadata, control account/profile permissions and grant-all flag.
+- name: manage_fetch
+  description: Controls data collection jobs (fetches).
+- name: manage_error
+  description: Lists errors and their state, retrieves details.
+- name: manage_extract
+  description: Lists and downloads data extracts.
+- name: manage_workspace
+  description: Lists workspaces and shows their structure.
+- name: manage_transformation
+  description: Creates, lists, and edits transformations.
+- name: manage_mapping_table
+  description: Lists, retrieves, and updates mapping tables.
+- name: manage_data_mapping
+  description: Maps a datastream's source columns to target columns.
+- name: manage_destinations
+  description: Creates and manages destinations.
+- name: manage_user
+  description: Lists and manages instance users.
+- name: manage_notifications
+  description: Manages notification subscriptions.

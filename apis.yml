@@ -1,9 +1,29 @@
 aid: adverity
 name: Adverity
-description: 'Adverity is a company surfaced as a portfolio company of sapphire-ventures, softbank-vision-fund,
-  speedinvest and added to the API Evangelist network as a stub for enrichment. Sector: data-analytics.
-  This profile is a lead awaiting the enrichment pipeline.'
+description: 'Adverity is a marketing data intelligence platform that integrates,
+  harmonizes, transforms, and analyzes marketing and advertising data from hundreds
+  of sources (Google Ads, Facebook Ads, LinkedIn Ads, and more) into a single, governed
+  data foundation for reporting, dashboards, and downstream data warehouses. Adverity
+  exposes a programmatic Management API (legacy /api/ plus a newer /api/v1/ surface)
+  for managing datastreams, authorizations, fetches, transformations, destinations,
+  workspaces, and users, and ships an Adverity Atlas Model Context Protocol (MCP)
+  server (beta) so AI assistants can monitor, configure, and control data pipelines
+  in natural language. The company is ISO/IEC 27001 certified (TUV Austria), SOC 2
+  Type 2 audited, and GDPR/UK GDPR/CCPA/HIPAA compliant.'
 url: https://raw.githubusercontent.com/api-evangelist/adverity/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.adverity.com/hubfs/7.%20Webpages/adverity-banner.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -18,7 +38,32 @@ modified: '2026-07-17'
 tags:
 - Company
 - Data Analytics
-apis: []
+- Marketing Analytics
+- Data Integration
+- ETL
+- Business Intelligence
+- Marketing Intelligence
+- MCP
+apis:
+- name: Adverity Management API
+  description: 'The Adverity Management API provides programmatic access to the Adverity
+    platform for managing datastreams, authorizations, fetches, transformations, data
+    mappings, destinations, workspaces, and users. It exposes a legacy /api/ surface
+    (the primary API) and a newer /api/v1/ surface for cross-workspace operations
+    such as smart schedule management, workspaces, users, and API key rotation. Hosts
+    are per-instance (https://{{INSTANCE}}/api/).'
+  humanURL: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+  baseURL: https://www.adverity.com/api/
+  tags:
+  - Management API
+  - Data Integration
+  properties:
+  - type: Documentation
+    url: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+  - type: Authentication
+    url: authentication/adverity-authentication.yml
+  - type: Conventions
+    url: conventions/adverity-conventions.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -27,3 +72,58 @@ maintainers:
 common:
 - type: Website
   url: https://www.adverity.com/
+- type: DeveloperPortal
+  url: https://docs.adverity.com/
+- type: Documentation
+  url: https://docs.adverity.com/index.html
+- type: APIReference
+  url: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+- type: GettingStarted
+  url: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+- type: Support
+  url: https://www.adverity.com/resources/product-support
+- type: HelpCenter
+  url: https://www.adverity.com/updates/adverity-help-center
+- type: Blog
+  url: https://www.adverity.com/blog
+- type: Pricing
+  url: https://www.adverity.com/pricing
+- type: TermsOfService
+  url: https://www.adverity.com/terms-of-use
+- type: PrivacyPolicy
+  url: https://www.adverity.com/privacy-notice
+- type: Postman
+  url: https://documenter.getpostman.com/view/4861982/SWT7CKex
+- type: ChangeLog
+  url: https://docs.adverity.com/reference/release-notes/release-notes.html
+- type: StatusPage
+  url: https://docs.adverity.com/reference/release-notes/incidents.html
+- type: Deprecation
+  url: lifecycle/adverity-lifecycle.yml
+- type: Lifecycle
+  url: lifecycle/adverity-lifecycle.yml
+- type: Compliance
+  url: https://www.adverity.com/analytics-platform/data-security
+- type: MCPServer
+  url: mcp/adverity-mcp.yml
+- type: Authentication
+  url: authentication/adverity-authentication.yml
+- type: Conventions
+  url: conventions/adverity-conventions.yml
+- type: Conformance
+  url: conformance/adverity-conformance.yml
+- type: DomainSecurity
+  url: security/adverity-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/adverity-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.adverity.com/analytics-platform/data-security
+- type: WellKnown
+  url: well-known/adverity-well-known.yml
+- type: LLMsTxt
+  url: llms/adverity-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

@@ -1,0 +1,26 @@
+generated: '2026-07-17'
+method: searched
+source: https://docs.adverity.com/reference/release-notes/release-notes.html
+versioning:
+  scheme: uri-path
+  surfaces: ['/api/ (legacy, primary)', '/api/v1/ (newer, cross-workspace)']
+  current: v1
+  note: Both the legacy /api/ and newer /api/v1/ surfaces are fully supported.
+  docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No formal machine-readable deprecation/Sunset (RFC 8594) policy is published;
+    lifecycle changes are communicated via release notes and announcements.
+release_notes: https://docs.adverity.com/reference/release-notes/release-notes.html
+announcements: https://docs.adverity.com/reference/release-notes/announcements.html
+status_page: https://docs.adverity.com/reference/release-notes/incidents.html
+status_page_note: >-
+  Adverity publishes an Incidents page in its documentation reference section rather
+  than a third-party status host; it records platform incidents and availability.
+sla:
+  url: https://www.adverity.com/analytics-platform/data-security
+  uptime_target: '99.9%+'
+  note: 99.9%+ availability cited on the data-security page.
+deprecated_operations: []

@@ -1,0 +1,25 @@
+generated: '2026-07-17'
+method: searched
+source: live probes of Adverity public hosts
+hosts:
+- host: https://www.adverity.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://docs.adverity.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /llms.txt
+    status: 404
+note: >-
+  No /.well-known/ discovery documents or llms.txt were served on the Adverity
+  public hosts as of 2026-07-17. Security reporting is instead published on the
+  data-security page (HackerOne bug bounty, cybersecurity@adverity.com) and captured
+  in security/adverity-vulnerability-disclosure.yml.

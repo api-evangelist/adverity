@@ -1,0 +1,43 @@
+# Adverity
+
+> Adverity is a marketing data intelligence platform that integrates, harmonizes, transforms, and analyzes marketing and advertising data from hundreds of sources (Google Ads, Facebook Ads, LinkedIn Ads, and more) into a single governed data foundation. It exposes a programmatic Management API and an Adverity Atlas Model Context Protocol (MCP) server (beta) for AI-driven pipeline control. Adverity is ISO/IEC 27001, SOC 2 Type 2, GDPR/UK GDPR/CCPA/HIPAA compliant.
+
+## APIs
+
+- [Adverity Management API](https://docs.adverity.com/guides/management-api/introduction-management-api.html): Manage datastreams, authorizations, fetches, transformations, data mappings, destinations, workspaces, and users. Legacy /api/ plus newer /api/v1/ surface; per-instance host https://{{INSTANCE}}/api/.
+
+## Docs
+
+- [Documentation home](https://docs.adverity.com/index.html)
+- [Getting started with the Management API](https://docs.adverity.com/guides/management-api/introduction-management-api.html)
+- [Authorizing to the Management API](https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html)
+- [Collecting data via the Management API](https://docs.adverity.com/guides/management-api/collecting-data-through-management-api.html)
+- [Using Adverity MCP (beta)](https://docs.adverity.com/guides/mcp/using-mcp.html)
+- [Release notes](https://docs.adverity.com/reference/release-notes/release-notes.html)
+- [Incidents](https://docs.adverity.com/reference/release-notes/incidents.html)
+- [Data security & compliance](https://www.adverity.com/analytics-platform/data-security)
+
+## Tools
+
+- [Postman collection — Adverity Management API](https://documenter.getpostman.com/view/4861982/SWT7CKex)
+- [Adverity Atlas MCP server (beta)](https://docs.adverity.com/guides/mcp/using-mcp.html): tools include manage_datastream, manage_authorization, manage_fetch, manage_error, manage_extract, manage_workspace, manage_transformation, manage_mapping_table, manage_data_mapping, manage_destinations, manage_user, manage_notifications.
+
+## Repository artifacts
+
+- [MCP server manifest](mcp/adverity-mcp.yml)
+- [Authentication profile](authentication/adverity-authentication.yml)
+- [API conventions](conventions/adverity-conventions.yml)
+- [Lifecycle](lifecycle/adverity-lifecycle.yml)
+- [Conformance & compliance](conformance/adverity-conformance.yml)
+- [Domain security](security/adverity-domain-security.yml)
+- [Vulnerability disclosure](security/adverity-vulnerability-disclosure.yml)
+- [Well-known index](well-known/adverity-well-known.yml)
+
+## Optional
+
+- [Website](https://www.adverity.com/)
+- [Pricing](https://www.adverity.com/pricing)
+- [Blog](https://www.adverity.com/blog)
+- [Product support](https://www.adverity.com/resources/product-support)
+- [Terms of use](https://www.adverity.com/terms-of-use)
+- [Privacy notice](https://www.adverity.com/privacy-notice)

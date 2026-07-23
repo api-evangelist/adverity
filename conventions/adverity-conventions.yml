@@ -1,0 +1,51 @@
+generated: '2026-07-17'
+method: searched
+source: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+authentication:
+  style: api-key
+  header: Authorization
+  formats: ['Token {{KEY}}', 'Bearer {{KEY}}']
+  ref: authentication/adverity-authentication.yml
+base_url:
+  pattern: https://{{INSTANCE}}/api/
+  note: Per-instance host; each Adverity customer has its own instance subdomain.
+surfaces:
+- id: legacy
+  path_prefix: /api/
+  note: Primary API surface for most resources (datastreams, authorizations, fetches, etc.).
+- id: v1
+  path_prefix: /api/v1/
+  note: Newer surface for operations spanning multiple workspaces or connector types (smart schedules, workspaces, users, API key rotation).
+discovery:
+  interactive_browser: https://{{INSTANCE}}/api/
+  options_method: >-
+    OPTIONS requests return the available configuration options for an endpoint;
+    the documented pattern is GET for ids/basic info, OPTIONS for config options,
+    then POST/PATCH to create or edit.
+pagination:
+  style: page-size
+  params:
+  - page_size
+  note: GET responses support a page_size parameter to limit results; filtering by id or date is supported.
+filtering:
+  params: [id, date]
+timestamps:
+  format: '%Y-%m-%dT%H:%M:%SZ'
+  timezone: UTC
+  note: All timestamps must be provided in UTC.
+rate_limits:
+  documented: false
+  note: >-
+    Adverity's Management API has no rate limits. The docs recommend performing only
+    one Management API task at a time because each call consumes instance resources.
+idempotency:
+  supported: false
+  note: No idempotency-key contract is documented for the Management API.
+error_envelope:
+  documented: false
+  note: Errors returned by the API browser / DRF-style responses; no published RFC 9457 problem+json envelope.
+related:
+- authentication/adverity-authentication.yml
+- lifecycle/adverity-lifecycle.yml
+- mcp/adverity-mcp.yml
