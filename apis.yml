@@ -4,12 +4,17 @@ description: 'Adverity is a marketing data intelligence platform that integrates
   harmonizes, transforms, and analyzes marketing and advertising data from hundreds
   of sources (Google Ads, Facebook Ads, LinkedIn Ads, and more) into a single, governed
   data foundation for reporting, dashboards, and downstream data warehouses. Adverity
-  exposes a programmatic Management API (legacy /api/ plus a newer /api/v1/ surface)
-  for managing datastreams, authorizations, fetches, transformations, destinations,
-  workspaces, and users, and ships an Adverity Atlas Model Context Protocol (MCP)
-  server (beta) so AI assistants can monitor, configure, and control data pipelines
-  in natural language. The company is ISO/IEC 27001 certified (TUV Austria), SOC 2
-  Type 2 audited, and GDPR/UK GDPR/CCPA/HIPAA compliant.'
+  exposes a programmatic Management API across three surfaces (legacy /api/, /api/v1/
+  for cross-workspace operations, and /api/v2/ for multi-range smart-pulling) for managing
+  datastreams, authorizations, fetches, transformations, destinations, workspaces, and
+  users, plus a UI-configured webhook surface with three events. It also runs a hosted
+  remote Model Context Protocol (MCP) server at https://mcp.eu.adverity.com/mcp (beta,
+  12 tools, OAuth 2.0 with PKCE and dynamic client registration) so AI assistants can
+  monitor, configure, and control data pipelines in natural language. No OpenAPI is
+  published; the REST contract is a documented endpoint table plus a public Postman
+  collection, and API keys carry per-resource read/write scopes. The company is ISO/IEC
+  27001 certified (TUV Austria), SOC 2 Type 2 audited, and GDPR/UK GDPR/CCPA/HIPAA
+  compliant.'
 url: https://raw.githubusercontent.com/api-evangelist/adverity/refs/heads/main/apis.yml
 accessModel:
   pricing: unknown
@@ -34,7 +39,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-08-13'
 tags:
 - Company
 - Data Analytics
@@ -49,9 +54,12 @@ apis:
   description: 'The Adverity Management API provides programmatic access to the Adverity
     platform for managing datastreams, authorizations, fetches, transformations, data
     mappings, destinations, workspaces, and users. It exposes a legacy /api/ surface
-    (the primary API) and a newer /api/v1/ surface for cross-workspace operations
-    such as smart schedule management, workspaces, users, and API key rotation. Hosts
-    are per-instance (https://{{INSTANCE}}/api/).'
+    (the primary API), a newer /api/v1/ surface for cross-workspace operations such
+    as smart schedule management, workspaces, users, bindings, custom monitors and
+    API key rotation/introspection, and an /api/v2/ surface for multi-range datastream
+    smart-pulling. All three are fully supported. Keys carry per-resource read/write
+    scopes. Hosts are per-instance (https://{{INSTANCE}}/api/); no OpenAPI is published
+    — the contract is a documented endpoint table plus a public Postman collection.'
   humanURL: https://docs.adverity.com/guides/management-api/introduction-management-api.html
   baseURL: https://www.adverity.com/api/
   tags:
@@ -64,6 +72,41 @@ apis:
     url: authentication/adverity-authentication.yml
   - type: Conventions
     url: conventions/adverity-conventions.yml
+  - type: OAuthScopes
+    url: scopes/adverity-scopes.yml
+  - type: ErrorCatalog
+    url: errors/adverity-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/adverity-rate-limits.yml
+  - type: DataModel
+    url: data-model/adverity-data-model.yml
+- name: Adverity MCP Server
+  description: 'The Adverity MCP server is a hosted, remote Model Context Protocol
+    endpoint that connects an AI assistant to an Adverity instance so it can monitor,
+    configure, and control data pipelines in natural language. It publishes 12 tools
+    covering datastreams, authorizations, fetches, errors, extracts, workspaces,
+    transformations, mapping tables, data mapping, destinations, users, and notification
+    subscriptions. Access is guarded by a real OAuth 2.0 authorization server
+    (authorization code plus refresh, PKCE S256, RFC 7591 dynamic client registration);
+    the user signs in with an instance URL and a Management API key, so the agent
+    inherits exactly that key''s scopes. All write tools use a two-phase preview-then-confirm
+    pattern. In beta, available to selected customers.'
+  humanURL: https://docs.adverity.com/guides/mcp/using-mcp.html
+  baseURL: https://mcp.eu.adverity.com/mcp
+  tags:
+  - MCP
+  - Agent
+  properties:
+  - type: Documentation
+    url: https://docs.adverity.com/guides/mcp/mcp-setup.html
+  - type: MCPServer
+    url: mcp/adverity-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/adverity-tool-crosswalk.yml
+  - type: Authentication
+    url: authentication/adverity-authentication.yml
+  - type: OAuthScopes
+    url: scopes/adverity-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -94,12 +137,14 @@ common:
   url: https://www.adverity.com/privacy-notice
 - type: Postman
   url: https://documenter.getpostman.com/view/4861982/SWT7CKex
+- type: Login
+  url: https://app.adverity.com/
 - type: ChangeLog
   url: https://docs.adverity.com/reference/release-notes/release-notes.html
+- type: ChangeLog
+  url: changelog/adverity-changelog.yml
 - type: StatusPage
   url: https://docs.adverity.com/reference/release-notes/incidents.html
-- type: Deprecation
-  url: lifecycle/adverity-lifecycle.yml
 - type: Lifecycle
   url: lifecycle/adverity-lifecycle.yml
 - type: Compliance
@@ -122,8 +167,22 @@ common:
   url: well-known/adverity-well-known.yml
 - type: LLMsTxt
   url: llms/adverity-llms.txt
+- type: ToolCrosswalk
+  url: mcp/adverity-tool-crosswalk.yml
+- type: OAuthScopes
+  url: scopes/adverity-scopes.yml
+- type: ErrorCatalog
+  url: errors/adverity-problem-types.yml
+- type: RateLimits
+  url: rate-limits/adverity-rate-limits.yml
+- type: Plans
+  url: plans/adverity-plans-pricing.yml
+- type: Webhooks
+  url: asyncapi/adverity-webhooks.yml
+- type: DataModel
+  url: data-model/adverity-data-model.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 11
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
