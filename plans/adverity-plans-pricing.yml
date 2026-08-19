@@ -1,0 +1,31 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.adverity.com/pricing
+docs: https://www.adverity.com/pricing
+plan_count: 0
+model: quote-only
+currency: null
+billing_periods: []
+plans: []
+statement: >-
+  "Because every customer is different we don't stick to rigid pricing plans. Instead, we
+  provide a fully customized quote, uniquely tailored for the needs and requirements of
+  every client. To find out more, simply fill out the form below and we'll discuss the best
+  plan for you."
+signup:
+  self_serve: false
+  path: Book a demo form on the pricing page; no public sign-up or free tier.
+  demo_form: https://www.adverity.com/pricing
+free_tier: false
+trial: not-published
+usage_metering:
+  metric: rows
+  note: >-
+    Adverity meters usage in data rows and exposes row-usage and billing metrics
+    programmatically — GET /api/billing-objects/ and GET/PATCH /api/billings/, gated by the
+    usage:read API key scope. The commercial rates behind those counters are not published.
+  docs: https://docs.adverity.com/guides/management-api/viewing-usage-metrics.html
+note: >-
+  An honest zero, not a gap in our research: Adverity publishes no tiers, no list prices,
+  no quotas and no overage rates. The pricing page is a demo-request form only. What IS
+  public is the metering dimension (rows) and the API that reads it, captured above.

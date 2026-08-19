@@ -1,0 +1,91 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.adverity.com/guides/administration/webhooks.html
+docs: https://docs.adverity.com/guides/administration/webhooks.html
+asyncapi_spec:
+  published: false
+  note: >-
+    Adverity publishes no AsyncAPI document. Probed /asyncapi.yaml, /asyncapi.json and the
+    docs host for an event catalog — nothing served. The event surface below is transcribed
+    from the provider's own "Managing webhooks" guide and from named events in the release
+    notes; nothing is invented.
+surface: webhooks
+direction: outbound
+summary: >-
+  Adverity sends an HTTP request to a customer-supplied endpoint when selected platform
+  events occur, so external systems can react without polling. Webhooks are configured per
+  workspace in the Adverity UI (Administration > Notifications > Webhooks) and require
+  Notifications Administrator privileges in that workspace.
+configuration:
+  managed_in: Adverity user interface (Administration page > Notifications > Webhooks)
+  api_managed: false
+  api_note: >-
+    Webhooks are not in the published Management API endpoint table and have no MCP tool.
+    The adjacent notification SUBSCRIPTIONS (email, Slack, Microsoft Teams) ARE API-managed
+    at /api/notifications/email/, /api/notifications/slack/ and
+    /api/notifications/microsoftteams/ and via the manage_notifications MCP tool — those are
+    push notifications to humans, not webhooks to systems.
+  fields:
+  - name: Payload URL
+    description: The customer endpoint that receives the HTTP request. HTTPS recommended, and required in practice for production.
+  - name: Secret
+    description: A customer-supplied secret value stored by Adverity and used by the receiving system to verify that a webhook request is genuine.
+  - name: Events
+    description: One or more events selected from the supported list.
+  - name: Enabled
+    description: Activates the webhook. A webhook can be saved disabled and enabled later.
+  permissions: Notifications Administrator in the target workspace.
+events:
+- name: Destinations Sync End
+  machine_name: destination_sync.end
+  description: >-
+    Fires when a destination sync completes. The machine event name and an extract.uuid
+    payload field are both named in release note 2026.29, which records a fix for webhook
+    signal handlers crashing when extract.uuid was null.
+  evidence:
+  - https://docs.adverity.com/guides/administration/webhooks.html
+  - https://docs.adverity.com/reference/release-notes/release-notes.html
+- name: Extract No Data Collected
+  machine_name: null
+  description: Fires when a datastream execution produced an extract containing no data.
+  evidence:
+  - https://docs.adverity.com/guides/administration/webhooks.html
+- name: Issue Created
+  machine_name: null
+  description: >-
+    Fires when a new issue is created. "Issues" is the UI name for what the API calls
+    Errors (GET /api/errors/, manage_error MCP tool).
+  evidence:
+  - https://docs.adverity.com/guides/administration/webhooks.html
+event_count: 3
+payload:
+  schema_published: false
+  known_fields:
+  - name: extract.uuid
+    source: release notes 2026.29
+    nullable: true
+    note: Documented only indirectly, via the fix for handlers crashing on a null value.
+  note: >-
+    Adverity publishes no webhook payload schema, no example payload, and no signature
+    header name. A consumer knows a secret is used for verification but not the algorithm,
+    the header, or the canonicalization — an agent cannot verify an Adverity webhook from
+    the public documentation alone.
+security:
+  verification: shared-secret
+  signature_header: not-documented
+  algorithm: not-documented
+  guidance:
+  - Use a publicly reachable HTTPS endpoint in production.
+  - Keep the secret value private and rotate it if it is exposed.
+delivery:
+  retries: not-documented
+  ordering: not-documented
+  timeouts: not-documented
+gaps:
+- No AsyncAPI or machine-readable event catalog.
+- Only one of three events has a published machine name.
+- No payload schema, signature header, or retry/delivery semantics documented.
+- Webhooks cannot be created or listed through the Management API or MCP — UI only.
+related:
+- errors/adverity-problem-types.yml
+- changelog/adverity-changelog.yml

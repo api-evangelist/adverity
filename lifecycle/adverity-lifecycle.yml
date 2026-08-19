@@ -1,26 +1,60 @@
-generated: '2026-07-17'
+generated: '2026-08-13'
 method: searched
 source: https://docs.adverity.com/reference/release-notes/release-notes.html
 versioning:
   scheme: uri-path
-  surfaces: ['/api/ (legacy, primary)', '/api/v1/ (newer, cross-workspace)']
-  current: v1
-  note: Both the legacy /api/ and newer /api/v1/ surfaces are fully supported.
+  surfaces:
+  - '/api/ (legacy, primary)'
+  - '/api/v1/ (cross-workspace, scoped)'
+  - '/api/v2/ (datastream smart-pulling, multi-range)'
+  current: v2
+  note: >-
+    All three surfaces are fully supported and Adverity states no migration is required —
+    v1 and v2 exist to carry features and cross-workspace operations the legacy surface
+    does not, not to replace it. Release numbering is calendar-based ({year}.{week}) and
+    is independent of the API path versions.
   docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
 deprecation:
   policy_url: null
   sunset_header: false
+  deprecation_header: false
+  policy: none-published
   note: >-
-    No formal machine-readable deprecation/Sunset (RFC 8594) policy is published;
-    lifecycle changes are communicated via release notes and announcements.
+    No deprecation policy, no notice period, and no RFC 8594 Sunset/Deprecation header
+    support. This is not an inference from silence: release 2026.33 removed GET
+    /ams/amsdatastream/group_by/ and GET /ams/amsdatastream/segment/ and the release note
+    itself says the endpoints were "removed without deprecation" and that this "is a
+    breaking change for clients". Breaking changes are announced in the weekly release
+    notes after the fact, and there is no machine-readable signal an agent could act on.
+  evidence:
+  - release: '2026.33'
+    change: Amazon Advertising datastream endpoints removed without deprecation (breaking).
+    url: https://docs.adverity.com/reference/release-notes/release-notes.html
 release_notes: https://docs.adverity.com/reference/release-notes/release-notes.html
+release_cadence: weekly
 announcements: https://docs.adverity.com/reference/release-notes/announcements.html
+changelog_artifact: changelog/adverity-changelog.yml
 status_page: https://docs.adverity.com/reference/release-notes/incidents.html
 status_page_note: >-
-  Adverity publishes an Incidents page in its documentation reference section rather
-  than a third-party status host; it records platform incidents and availability.
+  Adverity publishes an Incidents page inside its documentation reference section rather
+  than a third-party status host (there is no status.adverity.com — DNS does not resolve).
+  It records platform incidents and availability, but it is an HTML docs page with no
+  machine-readable feed, no component-level status and no subscribe endpoint.
 sla:
   url: https://www.adverity.com/analytics-platform/data-security
   uptime_target: '99.9%+'
-  note: 99.9%+ availability cited on the data-security page.
-deprecated_operations: []
+  note: 99.9%+ availability cited on the data-security page; no published credit schedule or per-tier SLA document.
+support_windows:
+  api_versions: All published surfaces supported indefinitely; none announced as end-of-life.
+deprecated_operations:
+- endpoint: GET /ams/amsdatastream/group_by/
+  status: removed
+  release: '2026.33'
+  notice: none
+- endpoint: GET /ams/amsdatastream/segment/
+  status: removed
+  release: '2026.33'
+  notice: none
+related:
+- changelog/adverity-changelog.yml
+- conventions/adverity-conventions.yml

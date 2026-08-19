@@ -1,6 +1,6 @@
-generated: '2026-07-17'
+generated: '2026-08-13'
 method: searched
-source: live probes of Adverity public hosts
+source: live probes of Adverity public hosts (www, docs, app, mcp.eu)
 hosts:
 - host: https://www.adverity.com
   documents:
@@ -10,16 +10,57 @@ hosts:
     status: 404
   - path: /.well-known/openid-configuration
     status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
   - path: /llms.txt
     status: 404
 - host: https://docs.adverity.com
   documents:
   - path: /.well-known/security.txt
     status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
   - path: /llms.txt
     status: 404
+- host: https://mcp.eu.adverity.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: adverity-oauth-authorization-server.json
+    note: >-
+      RFC 8414 authorization server metadata for the Adverity MCP server. Declares
+      authorization_code + refresh_token grants, PKCE S256, and a dynamic client
+      registration endpoint (RFC 7591) at https://mcp.eu.adverity.com/register.
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    file: adverity-oauth-protected-resource.json
+    note: >-
+      RFC 9728 protected resource metadata, advertised in the WWW-Authenticate header
+      returned by an unauthenticated POST to https://mcp.eu.adverity.com/mcp. Names the
+      MCP endpoint as the protected resource and mcp.eu.adverity.com as its authorization
+      server. scopes_supported is an empty array.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
 note: >-
-  No /.well-known/ discovery documents or llms.txt were served on the Adverity
-  public hosts as of 2026-07-17. Security reporting is instead published on the
-  data-security page (HackerOne bug bounty, cybersecurity@adverity.com) and captured
-  in security/adverity-vulnerability-disclosure.yml.
+  Adverity serves no /.well-known/ documents on its marketing (www) or documentation
+  (docs) hosts, and no llms.txt on either. It DOES serve a real OAuth discovery surface
+  on the MCP host, mcp.eu.adverity.com — RFC 8414 authorization-server metadata and
+  RFC 9728 protected-resource metadata for the remote MCP server. That is the only
+  machine-readable discovery document Adverity publishes anonymously, and it is what
+  the WellKnown pointer in apis.yml refers to. Security reporting is published on the
+  data-security page (HackerOne bug bounty, cybersecurity@adverity.com) rather than a
+  security.txt; see security/adverity-vulnerability-disclosure.yml.

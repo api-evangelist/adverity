@@ -1,0 +1,104 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.adverity.com/reference/release-notes/release-notes.html
+docs: https://docs.adverity.com/reference/release-notes/release-notes.html
+announcements: https://docs.adverity.com/reference/release-notes/announcements.html
+incidents: https://docs.adverity.com/reference/release-notes/incidents.html
+scheme:
+  format: '{release-year}.{release-week-number}'
+  cadence: weekly
+  example: '2026.33'
+  note: >-
+    Release numbers are calendar-based, not semantic. Every release is documented under
+    section headings including a dedicated "Management API" section that names concrete
+    endpoints, query parameters and status codes — one of the more machine-legible
+    changelogs in the marketing-data category, even though no OpenAPI backs it.
+current_version: '2026.33'
+last_updated: '2026-08-12'
+window:
+  from: '2026.29'
+  to: '2026.33'
+  note: Recent window only; the page carries the full release history back through earlier 2026 weeks.
+entries:
+- version: '2026.33'
+  area: Management API
+  breaking:
+  - change: >-
+      GET /ams/amsdatastream/group_by/ and GET /ams/amsdatastream/segment/ (Amazon
+      Advertising datastream endpoints) were REMOVED WITHOUT DEPRECATION.
+    note: >-
+      Adverity's own release note labels this "a breaking change for clients relying on
+      these endpoints" and states it shipped without a deprecation period — direct evidence
+      that there is no Sunset/Deprecation header contract. See
+      lifecycle/adverity-lifecycle.yml.
+  additions:
+  - New optional query parameters creator, ids, name, stack_id and transformer on GET /api/datastream-types/{parent_lookup_type_id}/datastreams/.
+  - New optional scheduled_deletion query parameter on GET /api/datastream-types/{parent_lookup_type_id}/datastreams/.
+  fixes:
+  - GET /api/connection-types/{type_id}/connections/{pk}/authorize/ and PATCH .../token/ now return HTTP 404 for inaccessible or mismatched authorization IDs.
+  - A vulnerability allowing connections to be created in or moved to inaccessible workspaces was fixed.
+  - /api/datastreams/{datastream_id}/schedules/ now enforces workspace isolation on all operations.
+- version: '2026.32'
+  area: Management API
+  breaking: []
+  additions:
+  - >-
+    New Management API v2 surface (/api/v2/) for datastream smart-pulling configuration,
+    supporting up to four independent fetch ranges per datastream with lossless read and
+    write. The /api/v1/ smart-pulling endpoint remains available but reports and accepts
+    only a single range per request.
+  - MAPI error responses standardized across legacy /api/ endpoints — responses always contain detail, and contain errors when validation fails.
+  - scheduled_deletion query parameter added across GET /api/datastreams/, GET/PATCH /api/v1/datastreams/, POST/DELETE/OPTIONS /api/v1/datastreams/custom-monitors/ and PUT /api/v1/datastreams/pulling/smart/.
+  - Infegy Starscape connector endpoints added under /infegy_starscape/infegystarscapedatastream/.
+  - Length cap applied to the workspace_id parameter on GET /api/v1/custom-monitors/.
+  - POST /api/connection-types/{type_id}/connections/{id}/update/ metadata sync scoped to the caller's workspace; returns 404 for inaccessible, mismatched or deletion-scheduled authorizations.
+  agent_surface:
+  - MCP manage_authorization.create now requires a two-phase confirmation step.
+  - MCP manage_datastream list action supports filtering by scheduled_deletion.
+  - Fixed the MCP bulk mapping tool failing when PUT /api/datastreams/{id}/columns/map/ returned a list-shaped error.
+- version: '2026.31'
+  area: Management API
+  breaking: []
+  additions:
+  - Notification endpoints /api/notifications/email/, /api/notifications/slack/ and /api/notifications/microsoftteams/ expose notify_about_empty_extracts and exclude_warnings as writable booleans.
+  - >-
+    Length limits introduced for UUID lists in bulk endpoints (POST/DELETE
+    /api/v1/custom-monitors/{monitor_id}/datastreams/, POST/DELETE
+    /api/v1/datastreams/custom-monitors/, PATCH /api/v1/datastreams/, PUT
+    /api/v1/datastreams/pulling/smart/); requests over the 50-item cap now return HTTP 422.
+  - Readpeak connector dimension/metric endpoints added.
+  fixes:
+  - Management API key rotation security improved.
+  - PATCH /api/connection-types/{ctype_id}/connections/{id}/token/ now returns HTTP 400 for unsupported operations on non-OAuth authorization types.
+  - GET/PATCH /api/datastreams/{id}/columns/{cid}/ enforces workspace-level data isolation.
+  - GET /api/extracts/ no longer returns duplicate rows when filtering by job_id.
+- version: '2026.30'
+  area: Management API
+  breaking: []
+  additions:
+  - New endpoint GET /api/v1/auth/keys/introspect/ for checking the active status and details of an API key.
+  - Dedicated authorization:read and authorization:write API key scopes introduced.
+  - 'The Management API Keys page now displays granular per-key scopes, for example "Workspace: Write" and "Datastream: Read-only".'
+  - IP-based rate limiting implemented on the unauthenticated introspection route GET /api/v1/auth/keys/introspect/.
+  - BrightEdge connector endpoints added (ai_engines, personas, prompt_groups, time_frequency).
+  agent_surface:
+  - API key introspection is now performed during MCP server token refresh, so revoked or rotated keys are invalidated immediately when used through the MCP server.
+  - MCP server OAuth key management security enhanced.
+- version: '2026.29'
+  area: Management API
+  breaking: []
+  additions:
+  - Opt-in ?expand=destinations parameter on GET /api/datastreams/{id}/ and GET /api/datastream-types/{type_id}/datastreams/{id}/ consolidates destination binding details (table_name, write_disposition) into one call.
+  - /api/jobs/ now exposes who triggered a manual fetch, with new filters for user-specific or human-triggered fetches.
+  fixes:
+  - 500 error on GET /api/datastreams/{id}/jobs/ resolved.
+  - 500 errors on GET /api/transformer/ and GET /api/datastream-types/{type_id}/datastreams/ resolved.
+  - Workspace-bound MAPI keys could escalate privileges outside their workspace subtree on specific v1 endpoints; fixed.
+  - Webhook signal handlers for events such as destination_sync.end crashed on a null extract.uuid; fixed.
+machine_readable:
+  feed: false
+  note: No RSS/Atom or JSON changelog feed is published; the release notes are a single HTML page on the docs host.
+related:
+- lifecycle/adverity-lifecycle.yml
+- asyncapi/adverity-webhooks.yml
+- scopes/adverity-scopes.yml

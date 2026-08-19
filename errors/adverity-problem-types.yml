@@ -1,0 +1,90 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+format: custom
+rfc9457: false
+note: >-
+  Adverity does not use RFC 9457 application/problem+json. The Management API publishes its
+  own JSON error envelope for client-error responses on the legacy /api/ surface. Server
+  errors (5xx) and the /api/v1/ and /api/v2/ surfaces are explicitly documented as NOT
+  using this envelope.
+envelope:
+  content_type: application/json
+  applies_to: legacy /api/ endpoints, client-error status codes (for example 400, 404)
+  does_not_apply_to:
+  - 5xx server errors
+  - /api/v1/ endpoints
+  - /api/v2/ endpoints
+  fields:
+  - name: detail
+    type: string
+    required: always
+    description: A summary of the error as a single string. Always present.
+  - name: errors
+    type: object
+    required: on-validation-failure
+    description: >-
+      Individual field errors keyed by the Adverity field name, each value an array of
+      message strings. Present only when the request failed validation.
+  - name: <field-name>
+    type: array
+    required: legacy
+    description: >-
+      Adverity also keeps the original error fields at the top level of the response body
+      alongside detail/errors. New integrations should read detail and errors instead.
+  example: |
+    {
+      "detail": "Validation failed",
+      "errors": {
+        "name": ["This field may not be blank."]
+      },
+      "name": ["This field may not be blank."]
+    }
+list_shaped_errors:
+  note: >-
+    Endpoints that return a list rather than an object keep returning a list in the error
+    body. The position of each item in the returned list corresponds to the position of the
+    item sent in the request.
+  endpoints:
+  - PUT /api/datastreams/{{DATASTREAM_ID}}/columns/map/
+problems:
+- status: 400
+  title: Validation failed
+  envelope: '{ detail, errors, <original fields> }'
+  description: Client request failed validation; errors carries per-field messages keyed by Adverity field name.
+  source: docs
+- status: 404
+  title: Not found
+  envelope: '{ detail }'
+  description: >-
+    Resource not found or not accessible to the caller. Release 2026.33 notes that the
+    connection authorization and token-management endpoints now correctly return 404 for
+    inaccessible or mismatched authorization IDs.
+  source: docs + release notes 2026.33
+- status: 401
+  title: Unauthenticated
+  envelope: unspecified
+  description: Missing or invalid Authorization header (Token or Bearer key). Envelope shape not documented.
+  source: derived from authentication/adverity-authentication.yml
+  confidence: medium
+- status: 500
+  title: Server error
+  envelope: not-documented
+  description: Server error responses are explicitly excluded from the documented client-error envelope.
+  source: docs
+platform_errors:
+  note: >-
+    Separate from HTTP API errors, Adverity models pipeline failures as first-class "Errors"
+    (UI name "Issues") retrievable at GET /api/errors/ and through the manage_error MCP
+    tool, with per-error state, error groups, retry and acknowledge. Connector-level
+    troubleshooting is documented at the reference page below rather than as a numbered
+    error-code registry.
+  endpoint: GET /api/errors/
+  docs: https://docs.adverity.com/reference/1-connect/troubleshooting-errors-collect-transfer.html
+error_code_registry:
+  published: false
+  note: Adverity publishes no numbered/enumerated error-code registry for the Management API.
+related:
+- conventions/adverity-conventions.yml
+- authentication/adverity-authentication.yml

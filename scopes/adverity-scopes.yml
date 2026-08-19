@@ -1,0 +1,146 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+docs: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+summary: >-
+  Adverity has two distinct scope surfaces. (1) Management API keys generated in the
+  Adverity Administration UI carry per-resource PERMISSIONS set to No access, Read-only, or
+  Write; the v1 and v2 endpoint surfaces enforce them as explicit scope strings of the form
+  <resource>:read / <resource>:write. (2) The remote MCP server runs a real OAuth 2.0
+  authorization server (RFC 8414 + RFC 7591 dynamic client registration, PKCE S256) whose
+  published metadata declares an EMPTY scopes_supported array — the OAuth layer carries no
+  scopes of its own, and effective authority comes from the MAPI key the user supplies at
+  the Adverity sign-in step. There is no OAuth2 on the Management API itself.
+schemes:
+- name: ManagementApiKeyPermissions
+  type: apiKey
+  source: docs
+  note: >-
+    Set per key at creation time in Administration > Management API keys. Keys are assigned
+    to one workspace and grant access to that workspace and its child workspaces. Maximum
+    5 keys per workspace; creation requires Administrator permissions in the root
+    workspace.
+- name: AdverityMcpOAuth
+  type: oauth2
+  source: https://mcp.eu.adverity.com/.well-known/oauth-authorization-server
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://mcp.eu.adverity.com/authorize
+    tokenUrl: https://mcp.eu.adverity.com/token
+    registrationUrl: https://mcp.eu.adverity.com/register
+    pkce: S256
+    grant_types: [authorization_code, refresh_token]
+    scopes: {}
+    note: scopes_supported is [] in the protected-resource metadata; no OAuth scopes are advertised.
+scopes:
+- name: workspace:read
+  resource: Workspace
+  level: read
+  description: >-
+    Permissions equivalent to the Viewer user group across the key's workspace and its
+    children.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+- name: workspace:write
+  resource: Workspace
+  level: write
+  description: >-
+    Permissions equivalent to the Datastream Manager user group; also allows creating and
+    updating workspaces through the Management API. Deleting a workspace is NOT covered —
+    the owning user must have Administrator permissions in the root workspace.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+  spec_string_observed: false
+  note: Documented as the Workspace "Write" permission; the literal string is inferred from the workspace:read pattern and is not quoted verbatim in the docs.
+- name: authorization:read
+  resource: Authorization
+  level: read
+  description: >-
+    Read which accounts an authorization is permitted to collect from, and discover
+    available accounts, profiles, and campaigns.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+- name: authorization:write
+  resource: Authorization
+  level: write
+  description: Update the set of accounts an authorization is permitted to collect from.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+  spec_string_observed: false
+- name: datastream:read
+  resource: Datastream
+  level: read
+  description: List datastreams and retrieve their configuration, including the connector field hierarchy.
+  evidence: https://docs.adverity.com/guides/management-api/managing-datastreams-smart-schedule.html
+- name: datastream:write
+  resource: Datastream
+  level: write
+  description: Update datastream configuration, including smart schedule and pulling-mode settings on the v1/v2 surfaces.
+  evidence: https://docs.adverity.com/guides/management-api/managing-datastreams-smart-schedule.html
+- name: destination:read
+  resource: Destination
+  level: read
+  description: Read destination (Target) configuration and datastream-to-destination bindings.
+  evidence: https://docs.adverity.com/guides/management-api/listing-datastream-destination-bindings.html
+- name: destination:write
+  resource: Destination
+  level: write
+  description: >-
+    Create, update, and delete destinations, and requeue extracts. Assignable only at the
+    root workspace level.
+  evidence: https://docs.adverity.com/guides/management-api/requeueing-extracts.html
+- name: transformations:read
+  resource: Transformation
+  level: read
+  description: List and retrieve transformations (Transformers).
+  evidence: https://docs.adverity.com/guides/management-api/creating-editing-transformations.html
+- name: transformations:write
+  resource: Transformation
+  level: write
+  description: Create, edit, and delete transformations.
+  evidence: https://docs.adverity.com/guides/management-api/creating-editing-transformations.html
+- name: usage:read
+  resource: Usage
+  level: read
+  description: Retrieve row-usage and billing metrics through the Management API.
+  evidence: https://docs.adverity.com/guides/management-api/viewing-usage-metrics.html
+- name: monitor:read
+  resource: Monitor
+  level: read
+  description: Discover custom monitors available for assignment through the Management API.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+  spec_string_observed: false
+  note: Documented as the Monitor "Read-only" permission; literal scope string not quoted in the docs.
+- name: monitor:write
+  resource: Monitor
+  level: write
+  description: Assign or unassign custom monitors through the Management API.
+  evidence: https://docs.adverity.com/guides/management-api/bulk-assigning-custom-monitors.html
+  spec_string_observed: false
+- name: user:write
+  resource: User
+  level: write
+  description: >-
+    Access user-management endpoints (root workspace level only, and only for keys
+    generated in the Adverity user interface), and create, update, and delete notification
+    subscriptions. Notification-subscription writes also work with a key minted from user
+    credentials; subscriptions created that way are owned by the issuing user.
+  evidence: https://docs.adverity.com/guides/management-api/authorizing-to-management-api.html
+  spec_string_observed: false
+scope_count: 14
+verbatim_scope_strings:
+- authorization:read
+- datastream:read
+- datastream:write
+- destination:read
+- destination:write
+- transformations:read
+- transformations:write
+- usage:read
+- workspace:read
+note: >-
+  The nine strings in verbatim_scope_strings were read directly out of the published
+  Adverity documentation pages. The remaining entries are the documented UI permission
+  families (Workspace Write, Monitor, User) whose literal scope strings do not appear in
+  the docs; they are flagged spec_string_observed: false rather than being asserted as
+  verbatim. Nothing here is invented.
+related:
+- authentication/adverity-authentication.yml
+- mcp/adverity-mcp.yml
+- well-known/adverity-oauth-authorization-server.json

@@ -1,0 +1,43 @@
+generated: '2026-08-13'
+method: searched
+source: registry searches (npm, PyPI, RubyGems, crates.io) + Adverity docs and GitHub org
+package_count: 0
+official_sdk_count: 0
+packages: []
+registries_probed:
+- registry: npm
+  query: https://registry.npmjs.org/-/v1/search?text=adverity
+  result: 0 results
+  checked: '2026-08-13'
+- registry: pypi
+  query: https://pypi.org/pypi/adverity/json ; https://pypi.org/pypi/adverity-api/json
+  result: 404 Not Found for both
+  checked: '2026-08-13'
+- registry: rubygems
+  query: https://rubygems.org/api/v1/gems/adverity.json
+  result: gem not found
+  checked: '2026-08-13'
+- registry: crates.io
+  query: https://crates.io/api/v1/crates?q=adverity
+  result: 0 results
+  checked: '2026-08-13'
+- registry: github
+  query: https://github.com/adverity
+  result: >-
+    Org page returns HTTP 200 but exposes no public repositories; no first-party client
+    library, CLI or .proto could be found there.
+  checked: '2026-08-13'
+note: >-
+  Adverity ships NO first-party client libraries in any public package registry, and no
+  official SDK is referenced anywhere in the Management API documentation. The documented
+  integration path is "use any HTTP client" plus a public Postman collection
+  (https://documenter.getpostman.com/view/4861982/SWT7CKex). This is an honest zero, not an
+  unchecked gap — every registry above was queried on 2026-08-13 and answered. No SDKs
+  pointer is wired into apis.yml because there is no SDK to point at.
+distribution:
+  http_client: any
+  postman_collection: https://documenter.getpostman.com/view/4861982/SWT7CKex
+  mcp_server: https://mcp.eu.adverity.com/mcp
+  mcp_note: >-
+    The MCP server is remote-hosted only. There is no npx/pip-installable MCP package, so
+    there is nothing package-shaped to record for the agent surface either.

@@ -1,0 +1,166 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/adverity-mcp.yml (tool list from https://docs.adverity.com/guides/mcp/using-mcp.html)
+  bound against the published Management API endpoint table at
+  https://docs.adverity.com/guides/management-api/introduction-management-api.html
+surfaces:
+  openapi:
+    present: false
+    note: >-
+      Adverity publishes NO OpenAPI/Swagger document. Probed /openapi.json and
+      /swagger.json on www.adverity.com and docs.adverity.com (all 404, HTML shell). The
+      REST contract is a hand-written endpoint table plus a public Postman collection, so
+      the rest[] rows below carry documented endpoint PATHS and HTTP methods, not
+      operationIds from a spec — there are no operationIds to cite.
+    docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+    postman: https://documenter.getpostman.com/view/4861982/SWT7CKex
+  graphql:
+    present: false
+  mcp:
+    endpoint: https://mcp.eu.adverity.com/mcp
+    gated: true
+    note: tools/list returns HTTP 401 invalid_token; per-tool inputSchema requires an authenticated OAuth session bound to an Adverity instance and MAPI key.
+  rest_base:
+    pattern: https://{{INSTANCE}}/api/
+    note: Per-instance host, e.g. my-organization.datatap.adverity.com.
+naming:
+  note: >-
+    The docs publish a UI-name to API-name table that this crosswalk relies on. Workspace
+    is Stack in the API, Transformation is Transformer, Destination is Target, Target
+    field is Target column, Issues are Errors, and Fetch Jobs are Jobs.
+crosswalk:
+- tool: manage_datastream
+  category: pipelines
+  rest:
+  - GET,OPTIONS,PATCH,POST /api/datastreams/
+  - DELETE,GET,OPTIONS,PATCH,POST /api/datastream-types/
+  - GET /api/columns/
+  - GET,PATCH,PUT /api/v1/datastreams/
+  - GET,PATCH,PUT /api/v2/datastreams/
+  binding: rest
+  confidence: high
+  note: >-
+    Smart-schedule and pulling-mode configuration lives on the v1/v2 datastream surfaces
+    and requires the datastream:read / datastream:write API key scopes.
+- tool: manage_authorization
+  category: connections
+  rest:
+  - DELETE,GET,OPTIONS,PATCH,POST /api/connection-types/
+  - POST /api/connection-invite/
+  binding: rest
+  confidence: medium
+  note: >-
+    Authorizations are modelled as connections under connection-types in the REST surface;
+    the release notes name concrete sub-paths such as
+    GET /api/connection-types/{type_id}/connections/{pk}/authorize/ and
+    PATCH /api/connection-types/{type_id}/connections/{pk}/token/. Account-permission
+    management maps to the authorization:read / authorization:write scopes.
+- tool: manage_fetch
+  category: jobs
+  rest:
+  - GET,POST /api/jobs/
+  binding: rest
+  confidence: high
+  note: Fetch Jobs are named Jobs in the API. Schedules are exposed at /api/datastreams/{datastream_id}/schedules/.
+- tool: manage_error
+  category: monitoring
+  rest:
+  - GET /api/errors/
+  binding: rest
+  confidence: medium
+  note: >-
+    The documented endpoint table lists GET only for /api/errors/. Retry and acknowledge
+    are exposed by the MCP tool; the REST equivalents are not in the published table.
+- tool: manage_extract
+  category: data
+  rest:
+  - GET /api/extracts/
+  - POST /api/v1/extracts/requeue/
+  binding: rest
+  confidence: high
+- tool: manage_workspace
+  category: administration
+  rest:
+  - DELETE,GET,PATCH,POST /api/stacks/
+  - GET /api/v1/workspaces/
+  - DELETE,GET,PATCH,POST /api/storage/
+  binding: rest
+  confidence: high
+  note: Workspace is Stack in the legacy API; /api/v1/workspaces/ is the cross-workspace listing surface. Requires workspace:read / workspace:write.
+- tool: manage_transformation
+  category: processing
+  rest:
+  - DELETE,GET,PATCH,POST /api/transformer/
+  binding: rest
+  confidence: high
+  note: Transformation is Transformer in the API. Requires transformations:read / transformations:write.
+- tool: manage_mapping_table
+  category: harmonization
+  rest:
+  - DELETE,GET,PATCH,POST /api/mapping-tables/
+  - GET /api/value-tables/
+  binding: rest
+  confidence: high
+  note: Value tables are read-only in both surfaces; mapping tables cannot be created or deleted through the API, only through the UI.
+- tool: manage_data_mapping
+  category: harmonization
+  rest:
+  - GET,OPTIONS,POST /api/target-columns/
+  - GET /api/columns/
+  - PUT /api/datastreams/{{DATASTREAM_ID}}/columns/map/
+  binding: rest
+  confidence: medium
+  note: >-
+    The column-mapping PUT path is named in the docs' error-response note, which flags it
+    as one of the endpoints that returns a list rather than an object on error.
+- tool: manage_destinations
+  category: delivery
+  rest:
+  - DELETE,GET,OPTIONS,POST,PUT /api/target-types/
+  - GET,PATCH /api/v1/bindings/
+  binding: rest
+  confidence: medium
+  note: Destination is Target in the API; datastream-to-destination bindings are the v1 bindings surface. Requires destination:read / destination:write.
+- tool: manage_user
+  category: administration
+  rest:
+  - DELETE,GET,PATCH,POST /api/v1/users/
+  binding: rest
+  confidence: high
+  note: >-
+    User management endpoints are only available to API keys generated in the Adverity user
+    interface, not to keys minted from POST /api/auth/token/.
+- tool: manage_notifications
+  category: administration
+  rest:
+  - DELETE,GET,PATCH,POST /api/notifications/
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only:
+- endpoints:
+  - POST /api/auth/token/
+  - POST /api/v1/auth/keys/current/rotate/
+  capability: credential lifecycle
+  reason: >-
+    Minting and rotating Management API keys is deliberately outside the agent surface —
+    the MCP server consumes a MAPI key, it does not issue one.
+- endpoints:
+  - GET /api/billing-objects/
+  - GET,PATCH /api/billings/
+  capability: usage and billing metrics
+  reason: >-
+    Row-usage and billing metrics (the usage:read scope) have no corresponding MCP tool in
+    the published tool list.
+coverage:
+  tools_named: 12
+  tools_bound: 12
+  mcp_only: 0
+  rest_endpoint_groups_documented: 26
+  rest_endpoint_groups_with_a_tool: 22
+  note: >-
+    Counts are endpoint GROUPS from the docs' endpoint table (legacy /api/, /api/v1/,
+    /api/v2/), not operations — there is no spec to count operations from. Bindings are
+    name-and-semantics matches against the published docs; every rest[] path above appears
+    verbatim in Adverity documentation.

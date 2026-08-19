@@ -1,0 +1,58 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+limit_count: 1
+policy: none-published-except-one-route
+statement: >-
+  "Adverity's Management API has no rate limits. However, each Management API call uses
+  resources, so we recommend that you only perform one Management API task at a time. This
+  avoids overloading your resources and will prevent performance issues. Wait for one
+  Management API call to finish before performing another task."
+limits:
+- scope: per-ip
+  endpoint: GET /api/v1/auth/keys/introspect/
+  window: not-published
+  limit: not-published
+  burst: null
+  reason: >-
+    IP-based rate limiting was implemented on the unauthenticated API-key introspection
+    route to prevent denial-of-service attacks (release 2026.30). A follow-up fix in the
+    same release stopped the introspection rate limit from throttling multiple tenants at
+    once, specifically to avoid unintended throttling of requests reaching MAPI through the
+    MCP server.
+  source: https://docs.adverity.com/reference/release-notes/release-notes.html
+  note: >-
+    The only rate limit Adverity acknowledges anywhere. It applies to the one route that can
+    be called without a key. Neither the numeric limit nor the window is published.
+headers:
+  documented: false
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-*, or Retry-After response headers are documented, and none
+    could be observed: every Management API host is per-instance
+    (https://{{INSTANCE}}/api/) and requires an authenticated key, so there is no
+    anonymously reachable endpoint to read live headers from. The MCP endpoint
+    (https://mcp.eu.adverity.com/mcp) returned 401 with only a WWW-Authenticate header.
+exhaustion:
+  status_code: null
+  note: Not documented — Adverity states there are no rate limits to exhaust.
+guidance:
+  concurrency: >-
+    The documented control is serialization, not a quota: run one Management API task at a
+    time and wait for it to finish. This is advisory, has no machine-readable signal behind
+    it, and is enforced by resource contention on the customer's own instance rather than
+    by the API.
+downstream_limits:
+  note: >-
+    Adverity does surface rate limiting of the SOURCE platforms it collects from — for
+    example release 2026.33 records that the TikTok Ads connector was improved to handle
+    QPS limits more effectively. Those are third-party limits, not Adverity API limits.
+note: >-
+  Effectively an honest zero. Adverity affirmatively documents that its Management API has
+  no rate limits — a published position rather than an absence of documentation — and the
+  single exception is an IP limit on the one unauthenticated route. Either way an agent gets
+  no runtime backpressure signal (no headers, no documented 429 contract) and must
+  self-throttle on the "one task at a time" advice.
+related:
+- conventions/adverity-conventions.yml

@@ -1,47 +1,137 @@
-generated: '2026-07-17'
+generated: '2026-08-13'
 method: searched
 status: published
-source: https://docs.adverity.com/guides/mcp/using-mcp.html
+source: https://docs.adverity.com/guides/mcp/mcp-setup.html
+deployment:
+  mode: remote
+  endpoint: https://mcp.eu.adverity.com/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    The remote endpoint is published verbatim in the Adverity MCP setup guide as the
+    "Remote MCP server URL" to paste into Claude custom connectors and ChatGPT
+    connectors. A POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to it returned
+    HTTP 401 invalid_token with a WWW-Authenticate: Bearer challenge naming
+    https://mcp.eu.adverity.com/.well-known/oauth-protected-resource/mcp — so the server
+    is live and the live tool schemas are auth-gated. No stdio/npx package is published;
+    this is a hosted server only.
+  probe:
+    date: '2026-08-13'
+    url: https://mcp.eu.adverity.com/mcp
+    method: POST tools/list
+    http_status: 401
+    body: invalid_token (OAuth bearer challenge)
 server:
-  name: Adverity Atlas MCP
+  name: Adverity MCP
+  product_name: Adverity Atlas MCP
   transport: http
+  url: https://mcp.eu.adverity.com/mcp
   availability: beta
-  access: Selected customers; contact Account Manager (MCP Beta program)
+  access: >-
+    Selected customers. Requires an active Adverity account with Management API (MAPI)
+    access enabled; contact your Account Manager for the MCP beta program.
   clients:
-  - Claude Desktop
-  - VS Code
+  - Claude (Pro or higher, custom connectors)
+  - ChatGPT (Business or Enterprise, developer-mode connectors)
   - Any MCP-compatible AI client
-notes: >-
-  Adverity Atlas exposes the platform through a Model Context Protocol (MCP) server
-  (beta). It lets an AI assistant monitor, configure, and control data pipelines in
-  natural language. The specific per-instance server URL and setup config are
-  published on the setup guide (mcp-setup.html) and provisioned per customer;
-  not reproduced here.
+authentication:
+  model: oauth2-then-mapi-key
+  note: >-
+    The MCP client performs an OAuth 2.0 authorization-code flow (PKCE S256, dynamic
+    client registration) against mcp.eu.adverity.com; at the Adverity sign-in page the
+    user supplies their Instance URL and MAPI key. The AI assistant therefore inherits
+    exactly the permissions of that Management API key — see scopes/adverity-scopes.yml.
+  oauth_metadata: well-known/adverity-oauth-authorization-server.json
+  protected_resource_metadata: well-known/adverity-oauth-protected-resource.json
+  authorization_endpoint: https://mcp.eu.adverity.com/authorize
+  token_endpoint: https://mcp.eu.adverity.com/token
+  registration_endpoint: https://mcp.eu.adverity.com/register
+  grant_types: [authorization_code, refresh_token]
+  pkce: S256
+safety:
+  write_confirmation: two-phase
+  note: >-
+    Write operations follow a documented two-phase pattern: the tool first previews the
+    change and applies it only after the user explicitly confirms. Destructive fan-out
+    operations (replacing authorization account permissions, bulk-replacing datastream
+    column mappings, deleting a destination or a user) are called out in the docs as
+    full replacements that preview exactly what will be removed before applying.
 docs:
 - https://docs.adverity.com/guides/mcp/using-mcp.html
+- https://docs.adverity.com/guides/mcp/mcp-setup.html
 - https://www.adverity.com/updates/mcp-beta-program
 tools:
 - name: manage_datastream
-  description: Lists, creates, and configures datastreams; view status, enable or disable pipelines, explore connector types and field options.
+  description: >-
+    Lists, creates, and configures datastreams; view status, enable or disable pipelines,
+    filter datastreams scheduled for deletion, explore connector types and their field
+    options, and read or edit the metrics and dimensions a datastream collects.
+  confirmation_required: [create, update, enable, disable, change-collected-fields]
 - name: manage_authorization
-  description: Manages authorizations for connected data sources (Google Ads, Facebook Ads, LinkedIn Ads, etc.); create connections, monitor expiry, handle OAuth flows, refresh metadata, control account/profile permissions and grant-all flag.
+  description: >-
+    Manages authorizations for connected data sources (Google Ads, Facebook Ads, LinkedIn
+    Ads, etc.): create connections, check authorization status, handle OAuth flows,
+    refresh metadata from external APIs, and manage which accounts an authorization may
+    collect from including the grant-all flag. Has a list_permissions action.
+  confirmation_required: [create, update-permissions, update-grant-all]
 - name: manage_fetch
-  description: Controls data collection jobs (fetches).
+  description: >-
+    Controls data collection jobs — trigger fetches on demand or for a date range, monitor
+    job status, stop running jobs, and review a datastream's fetch schedule.
 - name: manage_error
-  description: Lists errors and their state, retrieves details.
+  description: >-
+    Lists errors and their state, retrieves a single error by ID, retries failed
+    operations, and acknowledges errors; retry/confirm can apply to one error or to every
+    error in the same error group.
+  confirmation_required: [retry, confirm]
 - name: manage_extract
-  description: Lists and downloads data extracts.
+  description: >-
+    Lists and downloads data extracts from successful datastream executions; downloads
+    return a preview of the first rows by default, full content on request.
 - name: manage_workspace
-  description: Lists workspaces and shows their structure.
+  description: Lists workspaces, shows their structure and hierarchy, lists available storage locations, and creates or updates workspaces.
+  confirmation_required: [create, update]
 - name: manage_transformation
-  description: Creates, lists, and edits transformations.
+  description: >-
+    Creates, lists, and edits transformations as part of datastream setup and retrieves the
+    schema of supported processing operations; only name and description are editable after
+    creation.
+  confirmation_required: [create, update, delete]
 - name: manage_mapping_table
-  description: Lists, retrieves, and updates mapping tables.
+  description: >-
+    Lists, retrieves, and updates mapping tables used for data harmonization and manages
+    individual match-to-value entries; read-only access to value tables. Mapping tables
+    cannot be created or deleted through the API.
+  confirmation_required: [all-writes]
 - name: manage_data_mapping
-  description: Maps a datastream's source columns to target columns.
+  description: >-
+    Maps a datastream's source columns to target columns — list source and target columns,
+    create target columns, and map, unmap, or bulk-replace a datastream's column mappings.
+  confirmation_required: [all-writes]
 - name: manage_destinations
-  description: Creates and manages destinations.
+  description: >-
+    Creates and manages destinations where harmonized data is delivered (BigQuery,
+    Snowflake, Google Sheets, etc.), lists destination types, and manages destination
+    column mappings.
+  confirmation_required: [create, update, delete]
 - name: manage_user
-  description: Lists and manages instance users.
+  description: Lists and manages instance users by ID — list, retrieve, create, update, delete — and sets any assignable platform role.
+  confirmation_required: [create, update, delete]
 - name: manage_notifications
-  description: Manages notification subscriptions.
+  description: >-
+    Manages notification subscriptions across email, Slack, and Microsoft Teams — list,
+    retrieve, create, update, delete — optionally scoped to specific datastreams or
+    workspaces.
+  confirmation_required: [create, update, delete]
+tool_count: 12
+schemas:
+  available: false
+  note: >-
+    Per-tool inputSchema could not be captured: tools/list requires an authenticated OAuth
+    bearer token. Tool names and descriptions above are transcribed from the provider's
+    published "Using Adverity MCP" guide, not invented. Live schema introspection needs an
+    Adverity instance and MAPI key.
+related:
+- mcp/adverity-tool-crosswalk.yml
+- scopes/adverity-scopes.yml
+- authentication/adverity-authentication.yml

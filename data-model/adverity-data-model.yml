@@ -1,0 +1,234 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  Derived from the published Management API endpoint table and guide pages at
+  https://docs.adverity.com/guides/management-api/ (no OpenAPI exists to derive $ref links
+  from), cross-checked against the UI-name/API-name mapping table and the MCP tool
+  descriptions.
+docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
+note: >-
+  Adverity publishes no OpenAPI, so this graph is built from documented endpoint paths,
+  documented path parameters (which reveal parent/child nesting), and the documented naming
+  table. Relationships marked confidence: medium are inferred from nesting or from MCP tool
+  descriptions rather than from a schema.
+naming:
+  ui_to_api:
+    Instance: the customer's Adverity host, e.g. my-organization.datatap.adverity.com
+    Workspace: Stack
+    Transformation: Transformer
+    Destination: Target
+    Target field: Target column
+    Issues: Errors
+    Fetch Jobs: Jobs
+entities:
+- name: Workspace
+  api_name: Stack
+  endpoint: /api/stacks/ ; /api/v1/workspaces/
+  description: >-
+    The container in which data is collected, transformed and worked with. Workspaces nest
+    — a Management API key is assigned to one workspace and reaches that workspace and all
+    its children. Access rights are managed at this level.
+  id_field: id
+- name: Datastream
+  endpoint: /api/datastreams/ ; /api/v1/datastreams/ ; /api/v2/datastreams/
+  description: A configured data collection pipeline — a connector plus its authorization, fields, schedule and pulling mode.
+  id_field: id
+- name: DatastreamType
+  endpoint: /api/datastream-types/
+  description: >-
+    The connector type a datastream instantiates. Datastreams are addressable nested under
+    their type, e.g. /api/datastream-types/{parent_lookup_type_id}/datastreams/.
+- name: Authorization
+  api_name: Connection
+  endpoint: /api/connection-types/{type_id}/connections/{id}/ ; /api/connection-invite/
+  description: >-
+    Credentials for an external data source (Google Ads, Facebook Ads, LinkedIn Ads…),
+    including which accounts/profiles the connection is permitted to collect from and a
+    grant-all flag.
+- name: ConnectionType
+  endpoint: /api/connection-types/
+  description: The class of external source an authorization belongs to.
+- name: Job
+  api_name: Job (UI - Fetch Job)
+  endpoint: /api/jobs/ ; /api/datastreams/{id}/jobs/
+  description: A fetch execution. Exposes who triggered a manual fetch (added 2026.29) and supports filtering by human-triggered fetches.
+- name: Schedule
+  endpoint: /api/datastreams/{datastream_id}/schedules/ ; PUT /api/v1/datastreams/pulling/smart/ ; /api/v2/datastreams/
+  description: >-
+    Fetch scheduling for a datastream. Smart Schedule supports up to four independent fetch
+    ranges per datastream on the v2 surface; v1 reports and accepts only one range per
+    request.
+- name: Extract
+  endpoint: /api/extracts/ ; POST /api/v1/extracts/requeue/
+  description: The data file produced by a successful datastream execution. Carries a uuid (seen in the destination_sync.end webhook payload).
+  id_field: uuid
+- name: Column
+  endpoint: /api/columns/ ; /api/datastreams/{id}/columns/{cid}/
+  description: A source column detected on a datastream.
+- name: TargetColumn
+  api_name: Target column (UI - Target field)
+  endpoint: /api/target-columns/
+  description: A harmonized destination field that source columns are mapped onto.
+- name: DataMapping
+  endpoint: PUT /api/datastreams/{DATASTREAM_ID}/columns/map/
+  description: >-
+    The mapping of a datastream's source columns onto target columns. Bulk replace is a full
+    replacement — any source column omitted is unmapped.
+- name: Transformation
+  api_name: Transformer
+  endpoint: /api/transformer/
+  description: Processing applied to collected data as part of datastream setup. Only name and description are editable after creation.
+- name: MappingTable
+  endpoint: /api/mapping-tables/
+  description: >-
+    A harmonization lookup of match-to-value pairs, shared across datastreams. Entries can be
+    added, edited and deleted through the API; the TABLE itself can only be created or
+    deleted in the UI.
+- name: ValueTable
+  endpoint: /api/value-tables/
+  description: Read-only reference resource used by transformations.
+- name: Destination
+  api_name: Target
+  endpoint: /api/target-types/ ; /api/storage/
+  description: Where harmonized data is delivered — BigQuery, Snowflake, Google Sheets, cloud storage, dashboards.
+- name: Binding
+  endpoint: /api/v1/bindings/
+  description: >-
+    The link between a datastream and a destination, carrying settings such as table_name and
+    write_disposition. Also surfaced inline on a datastream via ?expand=destinations.
+- name: Error
+  api_name: Error (UI - Issue)
+  endpoint: /api/errors/
+  description: A platform issue. Errors belong to error GROUPS, so retry and acknowledge can be applied to one error or to the whole group.
+- name: User
+  endpoint: /api/v1/users/
+  description: An instance user with an assignable platform role. Root-workspace-level permission; only keys generated in the UI may call these endpoints.
+- name: NotificationSubscription
+  endpoint: /api/notifications/ ; /api/notifications/email/ ; /api/notifications/slack/ ; /api/notifications/microsoftteams/
+  description: >-
+    A per-channel notification subscription, optionally scoped to specific datastreams or
+    workspaces. Writable fields include notify_about_empty_extracts and exclude_warnings.
+- name: Webhook
+  endpoint: null
+  description: UI-only outbound event subscription (payload URL, secret, events). Not exposed in the Management API. See asyncapi/adverity-webhooks.yml.
+- name: CustomMonitor
+  endpoint: /api/v1/custom-monitors/ ; /api/v1/datastreams/custom-monitors/
+  description: A data-quality monitor assignable to datastreams in bulk (50-item UUID cap, 422 over the cap).
+- name: ApiKey
+  endpoint: POST /api/auth/token/ ; POST /api/v1/auth/keys/current/rotate/ ; GET /api/v1/auth/keys/introspect/
+  description: A Management API credential, scoped to a workspace subtree and to per-resource read/write scopes.
+- name: Billing
+  endpoint: /api/billing-objects/ ; /api/billings/
+  description: Row-usage and billing metrics, gated by the usage:read scope.
+relationships:
+- from: Workspace
+  to: Workspace
+  type: has_many
+  via: parent workspace (workspace subtree)
+  confidence: high
+- from: Workspace
+  to: Datastream
+  type: has_many
+  via: stack
+  confidence: high
+- from: DatastreamType
+  to: Datastream
+  type: has_many
+  via: parent_lookup_type_id path parameter
+  confidence: high
+- from: Datastream
+  to: Authorization
+  type: belongs_to
+  via: connection
+  confidence: high
+- from: ConnectionType
+  to: Authorization
+  type: has_many
+  via: type_id path parameter
+  confidence: high
+- from: Datastream
+  to: Job
+  type: has_many
+  via: /api/datastreams/{id}/jobs/
+  confidence: high
+- from: Datastream
+  to: Schedule
+  type: has_many
+  via: /api/datastreams/{datastream_id}/schedules/
+  confidence: high
+- from: Job
+  to: Extract
+  type: has_many
+  via: job_id filter on /api/extracts/
+  confidence: high
+- from: Datastream
+  to: Column
+  type: has_many
+  via: /api/datastreams/{id}/columns/{cid}/
+  confidence: high
+- from: Column
+  to: TargetColumn
+  type: has_one
+  via: DataMapping (PUT /api/datastreams/{id}/columns/map/)
+  confidence: high
+- from: Datastream
+  to: Transformation
+  type: has_many
+  via: transformer filter on datastream listing
+  confidence: medium
+- from: Transformation
+  to: MappingTable
+  type: has_many
+  via: harmonization lookups referenced by transformations
+  confidence: medium
+- from: Transformation
+  to: ValueTable
+  type: has_many
+  via: read-only reference resource used by transformations
+  confidence: medium
+- from: Datastream
+  to: Binding
+  type: has_many
+  via: /api/v1/bindings/ and ?expand=destinations
+  confidence: high
+- from: Binding
+  to: Destination
+  type: belongs_to
+  via: target
+  confidence: high
+- from: Datastream
+  to: Error
+  type: has_many
+  via: datastream errors listed at /api/errors/
+  confidence: medium
+- from: Error
+  to: Error
+  type: has_many
+  via: error group
+  confidence: high
+- from: Datastream
+  to: CustomMonitor
+  type: has_many
+  via: /api/v1/datastreams/custom-monitors/
+  confidence: high
+- from: Workspace
+  to: NotificationSubscription
+  type: has_many
+  via: subscription scope (workspace or datastream)
+  confidence: high
+- from: Workspace
+  to: ApiKey
+  type: has_many
+  via: key assigned to a workspace; max 5 per workspace
+  confidence: high
+- from: User
+  to: ApiKey
+  type: has_many
+  via: keys minted from user credentials are owned by that user
+  confidence: high
+entity_count: 22
+relationship_count: 21
+render: null
+related:
+- mcp/adverity-tool-crosswalk.yml
+- conventions/adverity-conventions.yml

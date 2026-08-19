@@ -1,4 +1,4 @@
-generated: '2026-07-17'
+generated: '2026-08-13'
 method: searched
 source: https://docs.adverity.com/guides/management-api/introduction-management-api.html
 docs: https://docs.adverity.com/guides/management-api/introduction-management-api.html
@@ -6,46 +6,121 @@ authentication:
   style: api-key
   header: Authorization
   formats: ['Token {{KEY}}', 'Bearer {{KEY}}']
+  scoped: true
+  scope_note: >-
+    Keys generated in the Adverity UI carry per-resource read/write scopes (datastream:read,
+    destination:write, usage:read …) and are bound to one workspace subtree. Keys minted from
+    POST /api/auth/token/ inherit the user's permissions and cannot call user-management
+    endpoints.
+  introspection: GET /api/v1/auth/keys/introspect/
+  rotation: POST /api/v1/auth/keys/current/rotate/
   ref: authentication/adverity-authentication.yml
+  scopes_ref: scopes/adverity-scopes.yml
 base_url:
   pattern: https://{{INSTANCE}}/api/
-  note: Per-instance host; each Adverity customer has its own instance subdomain.
+  note: >-
+    Per-instance host — every Adverity customer has its own instance hostname, for example
+    my-organization.datatap.adverity.com. There is no shared multi-tenant API host, so
+    www.adverity.com/api/ returns 404 and cannot be called.
 surfaces:
 - id: legacy
   path_prefix: /api/
-  note: Primary API surface for most resources (datastreams, authorizations, fetches, etc.).
+  note: The primary API surface for most resources (datastreams, authorizations, fetches, jobs, errors, transformers, targets).
 - id: v1
   path_prefix: /api/v1/
-  note: Newer surface for operations spanning multiple workspaces or connector types (smart schedules, workspaces, users, API key rotation).
+  note: >-
+    Newer surface for operations spanning multiple workspaces or connector types — smart
+    schedules, workspaces, users, bindings, custom monitors, API key rotation and
+    introspection. Requires explicit API key scopes.
+- id: v2
+  path_prefix: /api/v2/
+  note: >-
+    Currently covers only datastream smart-pulling configuration, extending v1 to support up
+    to four independent fetch ranges per datastream without losing data on read or write.
+    Requires the same scopes as its v1 equivalents.
+version_policy: >-
+  All three surfaces are fully supported and no migration is required. Use v1 or v2 only
+  when the feature you need lives there, or when you must operate across multiple workspaces
+  in one request.
 discovery:
   interactive_browser: https://{{INSTANCE}}/api/
   options_method: >-
-    OPTIONS requests return the available configuration options for an endpoint;
-    the documented pattern is GET for ids/basic info, OPTIONS for config options,
-    then POST/PATCH to create or edit.
+    OPTIONS returns the available configuration options for an endpoint. The documented
+    workflow is GET for ids/basic info, OPTIONS for configuration options, then POST/PATCH to
+    create or edit. This is the closest thing Adverity has to a machine-readable contract —
+    there is no OpenAPI.
+  openapi: false
 pagination:
   style: page-size
   params:
   - page_size
-  note: GET responses support a page_size parameter to limit results; filtering by id or date is supported.
+  note: >-
+    GET responses accept page_size to limit the number of results. No cursor, offset, or
+    next-link contract is documented, and the response envelope for a list is not published.
 filtering:
-  params: [id, date]
+  params: [id, date, ordering]
+  example: https://{{INSTANCE}}/api/jobs/?stack=4&ordering=id&page_size=10
+  additional:
+  - >-
+    Datastream listings accept creator, ids, name, stack_id, transformer and
+    scheduled_deletion (added 2026.32-2026.33).
+  - /api/jobs/ supports filtering to user-specific or human-triggered fetches (2026.29).
+  - /api/extracts/ supports a job_id filter.
+expansion:
+  supported: true
+  param: expand
+  example: GET /api/datastreams/{id}/?expand=destinations
+  note: >-
+    Opt-in expansion added 2026.29; consolidates destination binding details such as
+    table_name and write_disposition into the datastream response instead of a second call.
+    Only the destinations expansion is documented.
+bulk:
+  supported: true
+  limit: 50
+  note: >-
+    UUID lists in bulk endpoints (custom-monitor assignment, PATCH /api/v1/datastreams/, PUT
+    /api/v1/datastreams/pulling/smart/) are capped at 50 items; over the cap the API returns
+    HTTP 422.
 timestamps:
   format: '%Y-%m-%dT%H:%M:%SZ'
   timezone: UTC
   note: All timestamps must be provided in UTC.
 rate_limits:
   documented: false
+  exception: IP-based limiting on the unauthenticated GET /api/v1/auth/keys/introspect/ route.
   note: >-
-    Adverity's Management API has no rate limits. The docs recommend performing only
-    one Management API task at a time because each call consumes instance resources.
+    Adverity states the Management API has no rate limits and recommends running only one
+    Management API task at a time. No RateLimit-* headers, no documented 429 contract.
+  ref: rate-limits/adverity-rate-limits.yml
 idempotency:
   supported: false
-  note: No idempotency-key contract is documented for the Management API.
+  header: null
+  note: >-
+    No idempotency-key contract of any kind is documented for the Management API. There is no
+    safe-retry story for POST, and several documented operations are full replacements
+    (bulk column mapping, authorization account permissions) where a duplicate call is not
+    harmless. This is a real gap for agent use, partly compensated for on the MCP surface by
+    the two-phase confirmation pattern.
+request_tracing:
+  request_id_header: not-documented
 error_envelope:
-  documented: false
-  note: Errors returned by the API browser / DRF-style responses; no published RFC 9457 problem+json envelope.
+  documented: true
+  format: custom
+  shape: '{ detail, errors, <original top-level fields> }'
+  applies_to: legacy /api/ endpoints, client-error status codes
+  excluded: [5xx responses, /api/v1/ endpoints, /api/v2/ endpoints]
+  ref: errors/adverity-problem-types.yml
+agent_surface:
+  mcp: https://mcp.eu.adverity.com/mcp
+  write_confirmation: >-
+    Two-phase — MCP write tools preview the change and apply it only after explicit user
+    confirmation. Full-replacement operations preview exactly what will be removed.
+  ref: mcp/adverity-mcp.yml
 related:
 - authentication/adverity-authentication.yml
+- scopes/adverity-scopes.yml
+- errors/adverity-problem-types.yml
+- rate-limits/adverity-rate-limits.yml
 - lifecycle/adverity-lifecycle.yml
+- data-model/adverity-data-model.yml
 - mcp/adverity-mcp.yml
