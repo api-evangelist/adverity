@@ -95,6 +95,9 @@ apis:
   baseURL: https://mcp.eu.adverity.com/mcp
   tags:
   - MCP
+  - Agents
+  tags_raw:
+  - MCP
   - Agent
   properties:
   - type: Documentation
