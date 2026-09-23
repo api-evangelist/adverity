@@ -1,0 +1,36 @@
+# Front Door AI Index — adverity — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: adverity
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.adverity.com
+  final_host: www.adverity.com
+  ownership: own
+  owner: adverity
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 48
+  host_score: 48
+  density: 23.05
+  words: 2082
+  tiers:
+    agentic: 8
+    core: 35
+    model: 5
+  ambiguous: 6
+  top_terms:
+    AI: 31
+    agentic: 5
+    LLMs: 4
+    intelligence: 4
+    OpenAI: 2
+    agent: 2
+    AI agent: 1
+    Anthropic: 1
+    Azure OpenAI: 1
+    Gemini: 1
+    MCP: 1
+    prompts: 1
