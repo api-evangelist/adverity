@@ -1,9 +1,20 @@
-generated: '2026-10-13'
+generated: '2026-10-20'
 method: searched
+source:
+- shopify/integrations/shopify-integration-edges.yml
+- https://zapier.com/apps/adverity/integrations
+- https://n8n.io/integrations/adverity/
+- https://composio.dev/toolkits/adverity
+- https://monid.ai/tools/adverity
 checked:
 - https://aws.amazon.com/marketplace/
 - https://azuremarketplace.microsoft.com/
 - shopify/integrations/shopify-integration-edges.yml
+- https://composio.dev/toolkits/adverity
+- https://monid.ai/tools/adverity
+- https://n8n.io/integrations/adverity/
+- https://zapier.com/apps/adverity/integrations
+summary: null
 marketplace_apps: []
 edges:
 - partner_name: AWS Marketplace
@@ -54,5 +65,4 @@ edges:
   detected_by: mirror-platform-listings.py
   publisher_verified:
   - Built for Shopify
-source:
-- shopify/integrations/shopify-integration-edges.yml
+templates: []
