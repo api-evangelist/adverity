@@ -14,6 +14,14 @@ checked:
 - https://monid.ai/tools/adverity
 - https://n8n.io/integrations/adverity/
 - https://zapier.com/apps/adverity/integrations
+- https://app.hubspot.com/api/chirp-frontend-external/v1/gateway/com.hubspot.marketplace.personalization.rpc.PersonalizationPublicRpc/search
+- https://ecosystem.hubspot.com/marketplace/apps
+- https://ecosystem.hubspot.com/marketplace/explore?eco_PRODUCT_TYPE=APP&eco_CERTIFIED=true
+- https://ecosystem.hubspot.com/marketplace/solutions
+- hubspot/integrations/hubspot-integration-edges.yml
+- https://advertising.amazon.com/partners/directory
+- https://sellercentral.amazon.com/gspn
+- https://sellercentral.amazon.com/selling-partner-appstore
 summary: null
 marketplace_apps: []
 edges:
@@ -47,6 +55,39 @@ edges:
   seller_name: Adverity
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: HubSpot App Certification
+  partner: hubspot
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://ecosystem.hubspot.com/marketplace/explore?eco_PRODUCT_TYPE=APP&eco_CERTIFIED=true
+  category: HubSpot certified app publisher
+  contract_reference:
+    register: HubSpot App Marketplace Certified Apps (CERTIFIED filter on the storefront's public search JSON)
+    standard: HubSpot App Certification
+    spec_file: null
+    role: certified-app-publisher
+    registered_name: Adverity GmbH
+    matched_domain: adverity.com
+    matched_by: domain
+    identity_source: the listing's own companyUrl (no lookup)
+    certified_products:
+    - product: HubSpot Certified App
+      product_type: APP
+      certifier: HubSpot (App Certification)
+      listings: 1
+      example_listing: https://ecosystem.hubspot.com/marketplace/listing/adverity
+      lapsed: false
+      lapsed_note: the certified flag is printed on a LIVE public listing card (CERTIFIED filter); HubSpot prints
+        no certification date, so the badge reads as current
+    signal_note: certified_products = ONE entry per product type (HubSpot Certified App), never per listing; listing
+      counts are context
+    detected_by: sweep-hubspot-app-marketplace.py
+    detected: '2026-10-21'
+  detected_by: sweep-hubspot-app-marketplace.py
+  first_seen: '2026-10-21'
 - partner_name: Shopify (own)
   partner: shopify
   partner_match: mirror
@@ -65,4 +106,68 @@ edges:
   detected_by: mirror-platform-listings.py
   publisher_verified:
   - Built for Shopify
+- partner_name: HubSpot (own)
+  partner: hubspot
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/adverity
+  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
+  apps:
+  - Adverity
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: MARKETING_ANALYTICS
+- partner_name: Amazon Ads (partner directory, technology)
+  partner: amazon
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://advertising.amazon.com/partners/directory
+  mirror_of: amazon/integrations/amazon-integration-edges.yml
+  apps:
+  - Adverity
+  contract_reference:
+    register: Amazon Ads Partner Directory (advertising.amazon.com/partners/directory, GetPartners)
+    registered_name: Adverity
+    register_id: amzn1.ads1.ma1.5ubjqney1mspocd0ypf9ig1lt
+    matched_domain: adverity.com
+    matched_by: domain
+    services:
+    - ADVERTISING_EFFECTIVENESS
+    - BUSINESS_AND_MARKETING_INTELLIGENCE_TOOLS
+    - CAMPAIGN_MONITORING
+    - CAMPAIGN_REPORTING
+    - CLEAN_ROOM_INTEGRATION
+    - DATA_CONNECTORS
+    - DATA_INTEGRATION
+    - MARKETING_MIX_MODELING
+    - REPORTING_AND_ANALYTICS
+    - RETAIL_PERFORMANCE_MEASUREMENT
+    ads_products:
+    - AMAZON_DSP
+    - AMAZON_MARKETING_CLOUD
+    - SPONSORED_BRANDS
+    - SPONSORED_DISPLAY
+    - SPONSORED_PRODUCTS
+    service_models:
+    - SELF_SERVICE
+    - SERVICE
+    signal_note: listing = participation; accreditation recorded as partner_tier; ads_certifications are Amazon
+      Ads LEARNING certifications held by staff, not product conformance, never certified_products
+    detected_by: sweep-amazon-sp-api-appstore.py
+    detected: '2026-10-21'
+  detected: '2026-10-21'
+  detected_by: sweep-amazon-sp-api-appstore.py
+  partner_tier:
+  - VERIFIED_PARTNER
 templates: []
