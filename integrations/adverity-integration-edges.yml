@@ -22,6 +22,7 @@ checked:
 - https://advertising.amazon.com/partners/directory
 - https://sellercentral.amazon.com/gspn
 - https://sellercentral.amazon.com/selling-partner-appstore
+- adobe-analytics/integrations/adobe-analytics-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
@@ -88,41 +89,6 @@ edges:
     detected: '2026-10-21'
   detected_by: sweep-hubspot-app-marketplace.py
   first_seen: '2026-10-21'
-- partner_name: Shopify (own)
-  partner: shopify
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://apps.shopify.com/adverity-datatap
-  mirror_of: shopify/integrations/shopify-integration-edges.yml
-  apps:
-  - Adverity
-  listing_count: 1
-  detected: '2026-10-15'
-  detected_by: mirror-platform-listings.py
-  publisher_verified:
-  - Built for Shopify
-- partner_name: HubSpot (own)
-  partner: hubspot
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://ecosystem.hubspot.com/marketplace/listing/adverity
-  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
-  apps:
-  - Adverity
-  listing_count: 1
-  detected: '2026-10-21'
-  detected_by: mirror-platform-listings.py
-  category: MARKETING_ANALYTICS
 - partner_name: Amazon Ads (partner directory, technology)
   partner: amazon
   partner_match: mirror
@@ -170,4 +136,56 @@ edges:
   detected_by: sweep-amazon-sp-api-appstore.py
   partner_tier:
   - VERIFIED_PARTNER
+- partner_name: Shopify (own)
+  partner: shopify
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.shopify.com/adverity-datatap
+  mirror_of: shopify/integrations/shopify-integration-edges.yml
+  apps:
+  - Adverity
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  publisher_verified:
+  - Built for Shopify
+- partner_name: HubSpot (own)
+  partner: hubspot
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/adverity
+  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
+  apps:
+  - Adverity
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: MARKETING_ANALYTICS
+- partner_name: Adobe Analytics (own)
+  partner: adobe-analytics
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://exchange.adobe.com/apps/ec/100883
+  mirror_of: adobe-analytics/integrations/adobe-analytics-integration-edges.yml
+  apps:
+  - Adverity Datatap
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Adobe Exchange Experience Cloud listing (Analytics)
 templates: []

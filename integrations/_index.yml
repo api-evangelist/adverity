@@ -61,31 +61,6 @@
     detected: '2026-10-21'
   status: not-a-workflow
   arazzo: null
-- slug: adverity-shopify-own
-  label: Shopify (own)
-  partner: shopify
-  partner_name: Shopify (own)
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://apps.shopify.com/adverity-datatap
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
-- slug: adverity-hubspot-own
-  label: HubSpot (own)
-  partner: hubspot
-  partner_name: HubSpot (own)
-  category: MARKETING_ANALYTICS
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://ecosystem.hubspot.com/marketplace/listing/adverity
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
 - slug: adverity-amazon-ads-partner-directory-technology
   label: Amazon Ads (partner directory, technology)
   partner: amazon
@@ -126,5 +101,43 @@
       Ads LEARNING certifications held by staff, not product conformance, never certified_products
     detected_by: sweep-amazon-sp-api-appstore.py
     detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
+- slug: adverity-shopify-own
+  label: Shopify (own)
+  partner: shopify
+  partner_name: Shopify (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://apps.shopify.com/adverity-datatap
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: adverity-hubspot-own
+  label: HubSpot (own)
+  partner: hubspot
+  partner_name: HubSpot (own)
+  category: MARKETING_ANALYTICS
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/adverity
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: adverity-adobe-analytics-own
+  label: Adobe Analytics (own)
+  partner: adobe-analytics
+  partner_name: Adobe Analytics (own)
+  category: Adobe Exchange Experience Cloud listing (Analytics)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://exchange.adobe.com/apps/ec/100883
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
