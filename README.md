@@ -64,6 +64,130 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Adverity is a company surfaced as a portfolio company of sapphire-ventures, softbank-vision-fund, speedinvest and added to the API Evangelist network as a stub for enrichment. Sector: data-analytics. This profile is a lead awaiting the enrichment pipeline.
+Adverity is a marketing data intelligence platform that integrates, harmonizes, transforms, and analyzes marketing and advertising data from hundreds of sources (Google Ads, Facebook Ads, LinkedIn Ads, and more) into a single, governed data foundation for reporting, dashboards, and downstream data warehouses. Adverity exposes a programmatic Management API across three surfaces (legacy /api/, /api/v1/ for cross-workspace operations, and /api/v2/ for multi-range smart-pulling) for managing datastreams, authorizations, fetches, transformations, destinations, workspaces, and users, plus a UI-configured webhook surface with three events. It also runs a hosted remote Model Context Protocol (MCP) server at https://mcp.eu.adverity.com/mcp (beta, 12 tools, OAuth 2.0 with PKCE and dynamic client registration) so AI assistants can monitor, configure, and control data pipelines in natural language. No OpenAPI is published; the REST contract is a documented endpoint table plus a public Postman collection, and API keys carry per-resource read/write scopes. The company is ISO/IEC 27001 certified (TUV Austria), SOC 2 Type 2 audited, and GDPR/UK GDPR/CCPA/HIPAA compliant.
 
-Backed by: sapphire-ventures, softbank-vision-fund, speedinvest — https://www.adverity.com/
+**Areas:** Company · Data Analytics · Marketing Analytics · Data Integration · ETL · Business Intelligence · Marketing Intelligence · MCP
+
+## Adverity on APIs.io
+
+Everything profiled for Adverity is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/adverity/](https://apis.io/providers/adverity/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Adverity Management API](https://apis.io/apis/adverity/adverity-management-api/) — The Adverity Management API provides programmatic access to the Adverity platform for managing datastreams, authorizations, fetches, transformations, data…
+- [Adverity MCP Server](https://apis.io/apis/adverity/adverity-mcp-server/) — The Adverity MCP server is a hosted, remote Model Context Protocol endpoint that connects an AI assistant to an Adverity instance so it can monitor,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Adverity Webhooks](https://apis.io/asyncapis/adverity/adverity-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Adverity MCP](https://apis.io/servers/adverity/adverity-mcp/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Adverity Authentication](https://apis.io/security/adverity/adverity-authentication/)
+- [Adverity Domain Security](https://apis.io/security/adverity/adverity-domain-security/)
+- [Adverity Vulnerability Disclosure](https://apis.io/security/adverity/adverity-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Adverity Scopes](https://apis.io/scopes/adverity/adverity-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Adverity Plans Pricing](https://apis.io/plans/adverity/adverity-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Adverity Rate Limits](https://apis.io/rate-limits/adverity/adverity-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.adverity.com/)
+- [Documentation](https://docs.adverity.com/index.html)
+- [Getting started](https://docs.adverity.com/guides/management-api/introduction-management-api.html)
+- [API reference](https://docs.adverity.com/guides/management-api/introduction-management-api.html)
+- [Pricing](https://www.adverity.com/pricing)
+- [Support](https://www.adverity.com/resources/product-support)
+- [Changelog](https://docs.adverity.com/reference/release-notes/release-notes.html)
+- [Blog](https://www.adverity.com/blog)
+- [Security](https://www.adverity.com/analytics-platform/data-security)
+- [Compliance](https://www.adverity.com/analytics-platform/data-security)
+- [Terms of service](https://www.adverity.com/terms-of-use)
+- [Privacy policy](https://www.adverity.com/privacy-notice)
+- [Status](https://docs.adverity.com/reference/release-notes/incidents.html)
+
+## API Evangelist rating
+
+**Kin Score 53.8** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 65.0 |
+| Contract quality | 39.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 71.1 |
+| Developer ergonomics | 61.9 |
+| Access clarity | 46.1 |
+
+**Agent readiness 44.8** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/adverity/](https://apis.io/providers/adverity/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Adverity: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/adverity/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
